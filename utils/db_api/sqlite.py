@@ -61,7 +61,7 @@ class Database:
         sql = """
         CREATE TABLE Cart (
             id INTEGER PRIMARY KEY,
-            user_id INTEGER NULL UNIQUE
+            user_id INTEGER NOT NULL UNIQUE
         );"""
         self.execute(sql, commit=True)
     
@@ -91,12 +91,12 @@ class Database:
         self.execute(sql, parameters=(id, name, username), commit=True)
 
     def add_user_cart(self, user_id: int):
-            # SQL_EXAMPLE = "INSERT INTO Users(user_id) VALUES(1)"
+        # SQL_EXAMPLE = "INSERT INTO Users(user_id) VALUES(1)"
 
-            sql = """
-            INSERT INTO Users(user_id) VALUES(?)
-            """
-            self.execute(sql, parameters=(user_id), commit=True)
+        sql = """
+        INSERT INTO Cart(user_id) VALUES(?)
+        """
+        self.execute(sql, parameters=(user_id, ), commit=True)
 
     def select_all_users(self):
         sql = """
