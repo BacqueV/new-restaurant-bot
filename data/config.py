@@ -1,0 +1,11 @@
+from environs import Env
+
+# using environs framework
+env = Env()
+env.read_env()
+
+# environment variables
+BOT_TOKEN = env.str("BOT_TOKEN")  # Bot token
+ADMINS = env.list("ADMINS")  # admins list
+
+CHANNELS = ['-1001827005661', '-1001398879340']
