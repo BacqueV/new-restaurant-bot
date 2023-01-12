@@ -57,6 +57,24 @@ class Database:
         );"""
         self.execute(sql, commit=True)
 
+    def create_table_cart(self):
+        sql = """
+        CREATE TABLE Cart (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER NULL UNIQUE
+        );"""
+        self.execute(sql, commit=True)
+    
+    def create_table_cart_items(self):
+        sql = """
+        CREATE TABLE CartItems (
+            id INTEGER PRIMARY KEY,
+            product_id INTEGER NOT NULL,
+            quantity INTEGER NOT NULL,
+            cart_id INTEGER NULL UNIQUE
+        );"""
+        self.execute(sql, commit=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -71,6 +89,14 @@ class Database:
         INSERT INTO Users(id, Name, username) VALUES(?, ?, ?)
         """
         self.execute(sql, parameters=(id, name, username), commit=True)
+
+    def add_user_cart(self, user_id: int):
+            # SQL_EXAMPLE = "INSERT INTO Users(user_id) VALUES(1)"
+
+            sql = """
+            INSERT INTO Users(user_id) VALUES(?)
+            """
+            self.execute(sql, parameters=(user_id), commit=True)
 
     def select_all_users(self):
         sql = """

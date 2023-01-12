@@ -31,6 +31,8 @@ async def bot_start(message: types.Message, state: FSMContext):
                     username=username,
                     name=name)
         await message.answer(text, reply_markup=markup_sub)
+        db.add_user_cart(user_id=message.from_user.id)
+
         # Informing admins
         count = db.count_users()[0]
         msg = f"{message.from_user.full_name} joined to DB.\nThere are {count} users in DB."

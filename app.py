@@ -12,6 +12,8 @@ async def on_startup(dispatcher):
 
     # creating db
     try:
+        db.create_table_cart()
+        db.create_table_cart_items()
         db.create_table_users()
         db.create_categories()
         db.create_table_meals()
