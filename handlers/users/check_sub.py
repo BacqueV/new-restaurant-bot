@@ -3,7 +3,7 @@ from data.config import CHANNELS
 from utils.misc import subscription
 from aiogram import types
 from keyboards.inline.subscription import markup_sub
-from keyboards.default.main_menu import markup_main
+from keyboards.default.main_menu import markup_categories
 
 
 @dp.callback_query_handler(text='check_sub')
@@ -27,6 +27,6 @@ async def checker(call: types.CallbackQuery):
     await call.message.delete()
     if final_status:
         text = f"Добро пожаловать, {name}!"
-        await call.message.answer(text, reply_markup=markup_main)
+        await call.message.answer(text, reply_markup=markup_categories)
     else:
         await call.message.answer(result, disable_web_page_preview=True, reply_markup=markup_sub)
