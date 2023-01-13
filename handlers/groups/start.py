@@ -24,5 +24,5 @@ async def bot_start(message: types.Message):
         await bot.send_message(chat_id=ADMINS[0], text=msg)
 
     except sqlite3.IntegrityError:
-        await bot.send_message(chat_id=ADMINS[0], text=f"{name} is already in DB")
+        await bot.send_message(chat_id=ADMINS[0], text=f"{name} уже числится в БД")
         await message.answer(f"Welcome, {name}!")

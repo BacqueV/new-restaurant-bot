@@ -33,6 +33,21 @@ class Database:
             id INTEGER NOT NULL,
             Name varchar(255) NOT NULL,
             username varchar(255),
+            address TEXT,
+            number TEXT
+            PRIMARY KEY (id)
+            );
+"""
+        self.execute(sql, commit=True)
+
+    def create_table_orders(self):
+        sql = """
+        CREATE TABLE Orders(
+            id INTEGER,
+            user_id INTEGER NOT NULL,
+            number TEXT,
+            lat REAL,
+            lon REAL,
             PRIMARY KEY (id)
             );
 """
@@ -127,6 +142,14 @@ class Database:
                 """
         return self.execute(sql, fetchall=True)
 
+    def check_existence_number(self, id):
+        sql = 'SELECT number FROM Orders WHERE user_id=?'
+        return self.execute(sql, (id, ), fetchone=True)
+
+    def check_existence_location(self, id):
+        sql = 'SELECT lat FROM Orders WHERE user_id=?'
+        return self.execute(sql, (id, ), fetchone=True)
+
     def get_category(self, **kwargs):
         sql = """
         SELECT * FROM Categories WHERE 
@@ -168,7 +191,17 @@ class Database:
 
     def check_existence(self, product_id: int, cart_id: int):
         sql = """SELECT * FROM CartItems WHERE product_id=? AND cart_id=?;"""
-        return self.execute(sql, parameters=(product_id, cart_id), fetchall=True)
+        return self.execute(sql, parameters=(product_id, cart_id), fetchone=True)
+
+    def update_cart_data(self, quantity: int, cost: float, product_id: int, cart_id: int):
+        sql = """UPDATE CartItems SET quantity=?, cost=? WHERE product_id=? AND cart_id=?;"""
+        return self.execute(sql, parameters=(quantity, cost, product_id, cart_id), commit=True)
+
+    def add_order(self, user_id, number, lat, lon):
+        sql = """
+        INSERT INTO Orders (user_id, number, lat, lon) VALUES (?, ?, ?, ?)
+        """
+        self.execute(sql, parameters=(user_id, number, lat, lon), commit=True)
 
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
@@ -184,13 +217,17 @@ class Database:
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
 
-    def delete_data(self, **kwargs: int):
+    def delete_data(self, cart_id: int):
         sql = f"""
-        DELETE FROM CartItems WHERE 
+        DELETE FROM CartItems WHERE cart_id=?
         """
-        sql, parameters = self.format_args(sql, kwargs)
+        return self.execute(sql, parameters=(cart_id, ), commit=True)
 
-        return self.execute(sql, parameters, commit=True)
+    def delete_data_user(self, cart_id, product_id):
+        sql = f"""
+        DELETE FROM CartItems WHERE cart_id=? AND product_id=?
+        """
+        return self.execute(sql, parameters=(cart_id, product_id), commit=True)
 
 
 def logger(statement):

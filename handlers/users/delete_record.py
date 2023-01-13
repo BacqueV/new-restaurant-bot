@@ -2,16 +2,32 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
+from keyboards.default.main_menu import markup_categories, btn_back
 from loader import dp, db
 from states.main import ShopState
-from keyboards.default.main_menu import btn_back
-from utils.misc.product import Product
 
 
-@dp.message_handler(text='Корзинка', state='*')
-async def get_cart_items(message: types.Message, state: FSMContext):
+@dp.message_handler(text='Удалить все', state=ShopState.cart)
+async def clear_cart(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     cart_id = db.select_cart(user_id=user_id)[0]
+
+    db.delete_data(cart_id=cart_id)
+    await message.answer(
+        'Корзинка пуста, но я помогу вам набрать туда вещей!',
+        reply_markup=markup_categories)
+    await state.finish()
+
+
+@dp.message_handler(state=ShopState.cart)
+async def delete_meal(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    cart_id = db.select_cart(user_id=user_id)[0]
+
+    meal = message.text.split()[1]
+    meal_id = db.get_data(name=meal)[0]
+
+    db.delete_data_user(cart_id=cart_id, product_id=meal_id)
     items = db.get_all_items(cart_id=cart_id)
 
     if items:
@@ -33,7 +49,7 @@ async def get_cart_items(message: types.Message, state: FSMContext):
             markup_orders.row(KeyboardButton(
                 text=f'❌ {db.get_data(id=name)[1]} ❌',
                 callback_data=f'{meal_id}'
-                )
+            )
             )
 
         markup_orders.row(KeyboardButton(
@@ -41,7 +57,9 @@ async def get_cart_items(message: types.Message, state: FSMContext):
             ), btn_back
         )
         await message.answer(text, reply_markup=markup_orders)
-        await ShopState.cart.set()
     else:
-        await message.answer('Заказов нет, стоило бы исправить! 😅')
+        await message.answer(
+            'Заказов нет, стоило бы исправить! 😅',
+            reply_markup=markup_categories
+        )
         await ShopState.category.set()

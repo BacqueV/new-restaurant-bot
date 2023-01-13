@@ -1,3 +1,4 @@
 aiogram
 environs
 pandas
+geopy

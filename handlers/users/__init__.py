@@ -1,3 +1,4 @@
+from . import order
 from . import cart
 from . import back
 from . import help
@@ -8,3 +9,4 @@ from . import main_menu
 from . import categories_menu
 from . import more_info
 from . import buying
+from . import delete_record

@@ -18,7 +18,7 @@ markup_categories.add(btn_cart, btn_order)
 
 
 def make_meals_markup(category_id):
-    meals = db.select_all_meals(id=category_id)
+    meals = db.select_all_meals(category_id=category_id)
     markup_meals = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
 
     markup_meals.add(btn_back, btn_cart)

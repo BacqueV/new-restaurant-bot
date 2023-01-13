@@ -12,6 +12,7 @@ async def on_startup(dispatcher):
 
     # creating db
     try:
+        db.create_table_orders()
         db.create_table_users()
         db.create_categories()
         db.create_table_meals()

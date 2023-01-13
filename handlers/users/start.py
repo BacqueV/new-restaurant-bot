@@ -8,6 +8,7 @@ from loader import dp, db, bot
 from keyboards.inline.subscription import markup_sub
 from data.config import CHANNELS
 from aiogram.dispatcher import FSMContext
+from states.main import ShopState
 
 
 @dp.message_handler(IsPrivate(), CommandStart(), state='*')
@@ -22,7 +23,7 @@ async def bot_start(message: types.Message, state: FSMContext):
         invite_link = await chat.export_invite_link()
         channels_format += f"▶️ <a href='{invite_link}'><b>{chat.title}</b></a>\n"
 
-    text = f"<b>Subscribe this channels</b>\n\n" \
+    text = f"<b>Подпишитесь на эти каналы</b>\n\n" \
            f"{channels_format}"
 
     # Adding user into DB
@@ -35,9 +36,9 @@ async def bot_start(message: types.Message, state: FSMContext):
 
         # Informing admins
         count = db.count_users()[0]
-        msg = f"{message.from_user.full_name} joined to DB.\nThere are {count} users in DB."
+        msg = f"{message.from_user.full_name} зачислен в БД.\nВ БД {count} пользователей."
         await bot.send_message(chat_id=ADMINS[0], text=msg)
 
     except sqlite3.IntegrityError:
-        await bot.send_message(chat_id=ADMINS[0], text=f"{name} is already in DB")
+        await bot.send_message(chat_id=ADMINS[0], text=f"{name} уже числится в БД")
         await message.answer(text, reply_markup=markup_sub)

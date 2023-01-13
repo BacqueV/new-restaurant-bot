@@ -4,6 +4,16 @@ from keyboards.default.main_menu import markup_categories
 from states.main import ShopState
 from aiogram.dispatcher import FSMContext
 from keyboards.default.main_menu import make_meals_markup
+from random import choice
+
+WORDS = [
+    'Начнем!',
+    'Что-ж, начнем пожалуй...',
+    'Продолжаем!',
+    'Что закажем на сей раз?',
+    'У нас еще куча еды, не стесняйтесь!',
+    'Если закажешь на 150$ или больше, будет скидка!'
+]
 
 
 @dp.message_handler(text='Назад', state=ShopState.buying)
@@ -25,6 +35,8 @@ async def go_to_main(message: types.Message):
     await message.answer('<i>Выберите блюда на вечер...</i>', reply_markup=markup_categories)
 
 
-@dp.message_handler(text='Назад', state='*')
+@dp.message_handler(text='Назад', state=ShopState.cart)
 async def go_to_main(message: types.Message):
-    await message.answer('Начнем!', reply_markup=markup_categories)
+    lets_start = choice(WORDS)
+    await message.answer(lets_start, reply_markup=markup_categories)
+    await ShopState.category.set()
