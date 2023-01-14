@@ -8,21 +8,12 @@ from aiogram.dispatcher import FSMContext
 
 @dp.message_handler(text='Заказать', state='*')
 async def order_it(message: types.Message):
-    user_id = message.from_user.id
 
-    have_number = db.check_existence_number(id=user_id)
-    have_location = db.check_existence_location(id=user_id)
-
-    if have_number and have_location:
-        await message.answer('Спасибо за покупку, доставим за 5 минут!')
-    else:
-        await message.answer(
-            f'Отправьте мне свои данные\n'
-            f'Номер: {have_number}\n'
-            f'Локация: {have_location}',
-            reply_markup=markup_send_number
-        )
-        await ShopState.order.set()
+    await message.answer(
+        f'Отправьте мне свои данные\n',
+        reply_markup=markup_send_number
+    )
+    await ShopState.order.set()
 
 
 @dp.message_handler(content_types=types.ContentType.CONTACT, state=ShopState.order)
@@ -48,15 +39,31 @@ async def get_number(message: types.Message, state: FSMContext):
     lat = message.location.latitude
     lon = message.location.longitude
 
-    db.add_order(user_id=user_id, number=phone_number, lat=lat, lon=lon)
+    have_number = db.check_existence_number()
+    if have_number:
+        db.update_order_data(number=phone_number, lat=lat, lon=lon, user_id=user_id)
+    else:
+        db.add_order(user_id=user_id, number=phone_number, lat=lat, lon=lon)
     await message.answer('Спасибо за покупку, доставим за 5 минут!!', reply_markup=markup_categories)
 
 
 @dp.message_handler(text='Оформить заказ!', state=ShopState.order)
-async def end_ordering(message: types.Message):
+async def end_ordering(message: types.Message, state: FSMContext):
+    try:
+        data = await state.get_data()
+        phone_number = data['phone_number']
+        user_id = data['user_id']
 
-    await message.answer(
-        text='Спасибо за покупку, доставим за 5 минут!',
-        reply_markup=markup_categories
-    )
-    await ShopState.category.set()
+        have_number = db.check_existence_number(id=user_id)
+        if have_number:
+            db.update_order_data(number=phone_number, lat='NULL', lon='NULL', user_id=user_id)
+        else:
+            db.add_order(user_id=user_id, number=phone_number, lat='NULL', lon='NULL')
+
+        await message.answer(
+            text='Спасибо за покупку, доставим за 5 минут!',
+            reply_markup=markup_categories
+        )
+        await ShopState.category.set()
+    except KeyError:
+        await message.reply('Отправьте хотя бы номер вашего телефона!')

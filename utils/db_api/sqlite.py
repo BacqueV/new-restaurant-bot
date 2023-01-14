@@ -146,10 +146,6 @@ class Database:
         sql = 'SELECT number FROM Orders WHERE user_id=?'
         return self.execute(sql, (id, ), fetchone=True)
 
-    def check_existence_location(self, id):
-        sql = 'SELECT lat FROM Orders WHERE user_id=?'
-        return self.execute(sql, (id, ), fetchone=True)
-
     def get_category(self, **kwargs):
         sql = """
         SELECT * FROM Categories WHERE 
@@ -196,6 +192,10 @@ class Database:
     def update_cart_data(self, quantity: int, cost: float, product_id: int, cart_id: int):
         sql = """UPDATE CartItems SET quantity=?, cost=? WHERE product_id=? AND cart_id=?;"""
         return self.execute(sql, parameters=(quantity, cost, product_id, cart_id), commit=True)
+
+    def update_order_data(self, number, lat, lon, user_id):
+        sql = """UPDATE CartItems SET number=?, lat=?, lot=? WHERE user_id=?;"""
+        return self.execute(sql, parameters=(number, lat, lon, user_id), commit=True)
 
     def add_order(self, user_id, number, lat, lon):
         sql = """

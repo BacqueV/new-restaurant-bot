@@ -40,3 +40,10 @@ async def go_to_main(message: types.Message):
     lets_start = choice(WORDS)
     await message.answer(lets_start, reply_markup=markup_categories)
     await ShopState.category.set()
+
+
+@dp.message_handler(text='Назад', state='*')
+async def go_to_main(message: types.Message):
+    lets_start = choice(WORDS)
+    await message.answer(lets_start, reply_markup=markup_categories)
+    await ShopState.category.set()
