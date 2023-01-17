@@ -4,6 +4,7 @@ from loader import db
 # main menu
 btn_back = KeyboardButton(text='Назад')
 btn_cart = KeyboardButton(text='Корзинка')
+btn_settings = KeyboardButton(text='Настройки')
 btn_order = KeyboardButton(text='Заказать')
 
 categories = db.select_categories()
@@ -14,7 +15,7 @@ markup_categories = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
 for category in categories:
     markup_categories.insert(KeyboardButton(text=category[1]))
 
-markup_categories.add(btn_cart, btn_order)
+markup_categories.add(btn_cart, btn_settings)
 
 
 def make_meals_markup(category_id):

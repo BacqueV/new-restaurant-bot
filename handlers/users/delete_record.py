@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-from keyboards.default.main_menu import markup_categories, btn_back
+from keyboards.default.main_menu import markup_categories, btn_back, btn_settings
 from loader import dp, db
 from states.main import ShopState
 
@@ -34,7 +34,7 @@ async def delete_meal(message: types.Message, state: FSMContext):
 
         text = '<b>Ваши заказы</b>\n\n'
         markup_orders = ReplyKeyboardMarkup(
-            row_width=1,
+            row_width=2,
             resize_keyboard=True
         )
 
@@ -46,15 +46,15 @@ async def delete_meal(message: types.Message, state: FSMContext):
             meal_id = db.get_data(id=name)[0]
             await state.update_data({'meal_id': meal_id})
 
-            markup_orders.row(KeyboardButton(
+            markup_orders.insert(KeyboardButton(
                 text=f'❌ {db.get_data(id=name)[1]} ❌',
                 callback_data=f'{meal_id}'
-            )
+                )
             )
 
         markup_orders.row(KeyboardButton(
             text='Удалить все'
-            ), btn_back
+            ), btn_back, btn_settings
         )
         await message.answer(text, reply_markup=markup_orders)
     else:

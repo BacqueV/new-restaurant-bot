@@ -10,5 +10,5 @@ ADMINS = env.list("ADMINS")  # admins list
 
 CHANNELS = ['-1001827005661', '-1001398879340']  # required channels
 
-GEOPY_USER_AGENT = env.str('GEOPY_USER_AGENT')
+# paycom
 PROVIDER_TOKEN = env.str('PROVIDER_TOKEN')

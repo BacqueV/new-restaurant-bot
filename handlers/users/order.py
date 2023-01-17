@@ -6,7 +6,7 @@ from keyboards.default.main_menu import markup_categories
 from aiogram.dispatcher import FSMContext
 
 
-@dp.message_handler(text='Заказать', state='*')
+@dp.message_handler(text='Настройки', state='*')
 async def order_it(message: types.Message):
 
     await message.answer(
@@ -44,10 +44,10 @@ async def get_number(message: types.Message, state: FSMContext):
         db.update_order_data(number=phone_number, lat=lat, lon=lon, user_id=user_id)
     else:
         db.add_order(user_id=user_id, number=phone_number, lat=lat, lon=lon)
-    await message.answer('Спасибо за покупку, доставим за 5 минут!!', reply_markup=markup_categories)
+    await message.answer('Данные обновлены!', reply_markup=markup_categories)
 
 
-@dp.message_handler(text='Оформить заказ!', state=ShopState.order)
+@dp.message_handler(text='Выслать данные!', state=ShopState.order)
 async def end_ordering(message: types.Message, state: FSMContext):
     try:
         data = await state.get_data()
@@ -61,7 +61,7 @@ async def end_ordering(message: types.Message, state: FSMContext):
             db.add_order(user_id=user_id, number=phone_number, lat='NULL', lon='NULL')
 
         await message.answer(
-            text='Спасибо за покупку, доставим за 5 минут!',
+            text='Данные обновлены!',
             reply_markup=markup_categories
         )
         await ShopState.category.set()

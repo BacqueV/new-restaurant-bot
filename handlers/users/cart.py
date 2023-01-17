@@ -4,8 +4,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 from loader import dp, db
 from states.main import ShopState
-from keyboards.default.main_menu import btn_back
-from utils.misc.product import Product
+from keyboards.default.main_menu import btn_back, btn_order
 
 
 @dp.message_handler(text='Корзинка', state='*')
@@ -18,7 +17,7 @@ async def get_cart_items(message: types.Message, state: FSMContext):
 
         text = '<b>Ваши заказы</b>\n\n'
         markup_orders = ReplyKeyboardMarkup(
-            row_width=1,
+            row_width=2,
             resize_keyboard=True
         )
 
@@ -30,7 +29,7 @@ async def get_cart_items(message: types.Message, state: FSMContext):
             meal_id = db.get_data(id=name)[0]
             await state.update_data({'meal_id': meal_id})
 
-            markup_orders.row(KeyboardButton(
+            markup_orders.insert(KeyboardButton(
                 text=f'❌ {db.get_data(id=name)[1]} ❌',
                 callback_data=f'{meal_id}'
                 )
@@ -38,7 +37,7 @@ async def get_cart_items(message: types.Message, state: FSMContext):
 
         markup_orders.row(KeyboardButton(
             text='Удалить все'
-            ), btn_back
+            ), btn_back, btn_order
         )
         await message.answer(text, reply_markup=markup_orders)
         await ShopState.cart.set()

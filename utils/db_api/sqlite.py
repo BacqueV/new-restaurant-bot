@@ -194,7 +194,7 @@ class Database:
         return self.execute(sql, parameters=(quantity, cost, product_id, cart_id), commit=True)
 
     def update_order_data(self, number, lat, lon, user_id):
-        sql = """UPDATE CartItems SET number=?, lat=?, lot=? WHERE user_id=?;"""
+        sql = """UPDATE Orders SET number=?, lat=?, lon=? WHERE user_id=?;"""
         return self.execute(sql, parameters=(number, lat, lon, user_id), commit=True)
 
     def add_order(self, user_id, number, lat, lon):

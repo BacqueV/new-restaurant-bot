@@ -36,9 +36,9 @@ async def get_amount(message: types.Message, state: FSMContext):
                 await message.answer('Данные обновлены!', reply_markup=markup_categories)
             else:
                 db.add_cart_item(product_id=meal_id, quantity=amount, cost=float(price * amount), cart_id=cart_id)
-                await message.answer(f"<code>{meal_name} x {amount} = {price * amount}$</code>",
+                await message.answer(f"<code>{meal_name} x {amount} = {float(price * amount)}$</code>",
                                      reply_markup=markup_categories)
-                await ShopState.category.set()
+            await ShopState.category.set()
         else:
             await message.reply('Введите количество корректно')
     except ValueError:
