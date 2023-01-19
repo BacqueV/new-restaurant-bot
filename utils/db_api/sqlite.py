@@ -223,11 +223,11 @@ class Database:
         """
         return self.execute(sql, parameters=(cart_id, ), commit=True)
 
-    def delete_data_user(self, cart_id, product_id):
+    def delete_data_user(self, cart_id):
         sql = f"""
-        DELETE FROM CartItems WHERE cart_id=? AND product_id=?
+        DELETE FROM CartItems WHERE cart_id=?
         """
-        return self.execute(sql, parameters=(cart_id, product_id), commit=True)
+        return self.execute(sql, parameters=(cart_id, ), commit=True)
 
 
 def logger(statement):

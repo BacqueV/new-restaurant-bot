@@ -1,3 +1,4 @@
+from . import pay_for_order
 from . import order
 from . import cart
 from . import back

@@ -1,28 +1,29 @@
 from aiogram import types
 from aiogram.types import LabeledPrice
-from utils.misc.product import Product
 
 REGULAR_SHIPPING = types.ShippingOption(
     id='post_reg',
-    title="Fargo (3 kun)",
+    title="emu (3 дня)",
     prices=[
         LabeledPrice(
-            'Maxsus quti', 1000000),
+            'Спец. упаковка', 500000),
         LabeledPrice(
-            '3 ish kunida yetkazish', 5000000),
+            'Доставка за 3 рабочих дня', 5000000),
     ]
 )
 FAST_SHIPPING = types.ShippingOption(
     id='post_fast',
-    title='Express pochta (1 kun)',
+    title='Экспресс почта (1 день)',
     prices=[
         LabeledPrice(
-            '1 kunda yetkazish', 7000000),
+            'Доставка за 1 день', 7000000),
     ]
 )
 
-PICKUP_SHIPPING = types.ShippingOption(id='pickup',
-                                       title="Do'kondan olib ketish",
-                                       prices=[
-                                           LabeledPrice("Yetkazib berishsiz", -5000000)
-                                       ])
+PICKUP_SHIPPING = types.ShippingOption(
+    id='pickup',
+    title="Забрать самому",
+    prices=[
+        LabeledPrice("Без доставки", -5000000)
+    ]
+)
