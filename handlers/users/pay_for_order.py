@@ -24,7 +24,7 @@ async def order_meal(message: types.Message):
         amount = item[-2]
         msg += f"{name} ({price}) x {amount} = {(amount * price)}, "
         prices.append(
-            LabeledPrice(label=name, amount=int(price * 100))
+            LabeledPrice(label=name, amount=int(price * amount * 100))
         )
 
     products = Product(
